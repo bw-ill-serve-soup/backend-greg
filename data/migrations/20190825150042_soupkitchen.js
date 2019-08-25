@@ -8,9 +8,9 @@ exports.up = function(knex) {
         .notNullable();
       tbl.string("password", 128).notNullable();
     })
-    .createTable("ingredients", tbl => {
+    .createTable("inventory", tbl => {
       tbl.increments();
-      tbl.string("ingredient", 128);
+      tbl.string("inventory", 128);
     })
     .createTable("weights", tbl => {
       tbl.increments();
@@ -27,11 +27,11 @@ exports.up = function(knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
       tbl
-        .integer("ingredient_id")
+        .integer("inventory_id")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable("ingredients")
+        .inTable("inventory")
         .onDelete("CASCADE")
         .onUpdate("CASCADE")
       tbl.integer("quantity", 128);
@@ -50,6 +50,6 @@ exports.down = function(knex) {
     return knex.schema
     .dropTableIfExists("quantity")
     .dropTableIfExists("weights")
-    .dropTableIfExists("ingredients")
+    .dropTableIfExists("inventory")
     .dropTableIfExists("users")
 };
