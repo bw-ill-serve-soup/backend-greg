@@ -1,4 +1,4 @@
-//module.exports = knex(knexConfig.development)
+
 
 const knex = require("knex")
 const knexConfig = require("../knexfile")
@@ -8,5 +8,5 @@ const knexConfig = require("../knexfile")
 // knexfile points to productionDBConnection
 // productionDBConnection points to process.env, which is a Heroku-generated variable
 const dbENV = process.env.DB_ENV || "development"
-
-module.exports = knex(knexConfig(dbENV))
+//module.exports = knex(knexConfig.development)
+module.exports = knex(knexConfig[dbENV])
