@@ -1,5 +1,12 @@
+//module.exports = knex(knexConfig.development)
+
 const knex = require("knex")
 const knexConfig = require("../knexfile")
 
-// change config.development to production once tables form ready
-module.exports = knex(knexConfig.development)
+// Give DB_ENV to env vars on Heroku
+// knexConfig pointed to dbENV in knexfile
+// knexfile points to productionDBConnection
+// productionDBConnection points to process.env, which is a Heroku-generated variable
+const dbENV = process.env.DB_ENV || "development"
+
+module.exports = knex(knexConfig(dbENV))
