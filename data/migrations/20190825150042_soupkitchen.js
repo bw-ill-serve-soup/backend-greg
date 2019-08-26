@@ -29,7 +29,7 @@ exports.up = function(knex) {
     .createTable("inventory", tbl => {
       tbl.increments();
       tbl.integer("quantity", 128).notNullable()
-      tbl.string("weightUnit", 128);
+      tbl.string("weightUnit", 128).notNullable()
       tbl.string("inventoryItem", 128).notNullable();
       tbl
         .integer("user_id")
