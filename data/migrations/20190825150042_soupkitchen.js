@@ -42,8 +42,16 @@ exports.up = function(knex) {
     })
 };
 
+// exports.down = function(knex) {
+//   return knex.schema
+//     .dropTableIfExists("inventory")
+//     .dropTableIfExists("users");
+// };
+
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists("inventory")
-    .dropTableIfExists("users");
+  .dropTableIfExists("quantity")
+  .dropTableIfExists("weights")
+  .dropTableIfExists("inventory")
+  .dropTableIfExists("users")
 };
