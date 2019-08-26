@@ -19,7 +19,7 @@ exports.seed = function(knex) {
         {quantity: 3000, weightUnit: "cans", inventoryItem: "mushroom soup", user_id: 4},
         {quantity: 5000, weightUnit: "tentacles", inventoryItem: "squid", user_id: 5},
         {quantity: 54, weightUnit: "strips", inventoryItem: "bacon", user_id: 5},
-        {quantity: 8000000000, weightUnit: "Don't ask", inventoryItem: "soylent green", user_id: 5},
+        {quantity: 80000, weightUnit: "Don't ask", inventoryItem: "soylent green", user_id: 5},
       ]);
     });
 };
