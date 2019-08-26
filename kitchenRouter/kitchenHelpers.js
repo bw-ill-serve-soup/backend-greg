@@ -11,6 +11,17 @@ function getAll () {
 }
 
 function getUserInventory (id) {
-    return db("inventory").where({id: id})
-
+    return db("inventory").where({user_id: id})
 }
+
+function addNewIngredient () {
+    return db("ingredients").insert
+}
+
+// {
+//     userid: Gandalf,
+//     ingredients: meat, potatoties, clovers
+//         user_id = ...
+//     quantity: 5
+//     unit of measurement: lbs
+// }
