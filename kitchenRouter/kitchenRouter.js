@@ -23,30 +23,45 @@ router.get("/inventory", (req, res) => {
 });
 
 // addUserID takes user_id from decoded token, adds to user req body
-router.post("/inventory", kitchenHelper.addUserID, (req, res) => {
+// reqBodyCheck ensures all required fields are present
+router.post("/inventory", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckPost, (req, res) => {
   const newInven = req.body;
   kitchenHelper
-  .addNewInventoryItem(newInven)
-  .then(test2 => {
-    res.status(200).json(test2);
-  })
-  .catch(error=>{
-      res.status(500).json({Error: "Something's gone horribly wrong"})
-  })
+    .addNewInventoryItem(newInven)
+    .then(newItem => {
+      res.status(200).json(newItem);
+    })
+    .catch(error => {
+      res.status(500).json({ Error: "Something's gone horribly wrong" });
+    });
 });
 
-// Basic idea - user already included via decoded token, just need ingredients and quantity to be added,
-// Should make ingredients and quantity non-Nullable later?
-//  req.body will include: - id from token, ingredients, quantity
-//- just add to table and include user id as FK - boom, you're done
+// addUserID adds proper user ID
+// reqBodyCheck ensures all required fields are present
+router.put("/inventory", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckPut, (req, res) => {
+  const editItem = req.body;
+  console.log(editItem);
+  kitchenHelper
+    .editInventory(editItem)
+    .then(editedItem => {
+      res.status(200).json(editedItem);
+    })
+    .catch(error => {
+      res.status(500).json({ Error: "Something's gone horribly wrong" });
+    });
+});
 
-// GET requests will have to be to quantity - it's the only table that tracks relationships between users and ingredients.
-// GET to quantity, WHERE ingredient_id = ingredient, same for users
+// Works, but can delete any users inventory item if the item id is valid.
+// With more time, I'd add a database call, make sure the user_id on the body matches
+// the user_id for the item attempting to be deleted.
+//  But front end needs these endpoints today, such is the nature of build week
 
-//  POST, I dunno
-// user is known, ingredient and weight added is irrelevant - whatever you decide for one goes for the other
-// post to quantity - need to include user_id FK, inventory FK, weight FK
-// PROBLEM - how to handle inventory?  Should it have a user_id FK, or be its own little world?  How I handle inventory is how I'll handle weights
-//  REMEMBER - quantity is the crux of the whole thing, all GET requests will revolve around it and JOINs
+router.delete("/inventory", kitchenHelper.addUserID, (req, res) => {
+  //console.log(req.body);
+  const deleted = req.body;
+  kitchenHelper.deleteItem(deleted).then(delItem => {
+    res.status(200).json(delItem);
+  });
+});
 
 module.exports = router;
