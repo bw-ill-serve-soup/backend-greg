@@ -8,7 +8,10 @@ module.exports = (req, res, next) => {
       if (error) {
         res.status(401).json({ Error: "Bad token" });
       } else {
-        req.userId = { id: decodedToken.id };
+        // Decode token here and pass along info for front end to hook into userID
+        // Adding userInfo to every request - in addition to req.body, there's now req.userInfo
+        //  Can grab it from anywhere to ID the user and ensure only appropriate info is displayed
+        req.userInfo = decodedToken
         next();
       }
     });
