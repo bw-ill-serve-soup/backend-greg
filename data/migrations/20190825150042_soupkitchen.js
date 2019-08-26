@@ -11,7 +11,7 @@
 // The only way to make this work is either a horrendously complicated 4-table scenario with users, inventory with user FK, weight table with user FK,
 // and quantity table with user FK, inventory FK, and weight FK.  Each incoming req.body would have to be split off into several db calls to the 4 db's
 //  Then reunited for a single res.body.  It's possible, and doable in a few days, but requires more time and coordination than is possible in a single week.
-// The due date is in 4 days, and front end needs at least 3 days to coordinate amongst the 3 of them and test.  
+// The due date is in 4 days, and front end needs at least 3 days to coordinate amongst the 3 of them and test.
 // Basically - the backend needs to be done & work by the end of today
 // The solution I've chosen in this case is two tables - one for users, one for inventory
 //  It's sub-optimal, but it meets the project requirements, each entry will be unique with user FK's, and can be done in a week with a remote team
@@ -28,8 +28,8 @@ exports.up = function(knex) {
     })
     .createTable("inventory", tbl => {
       tbl.increments();
-      tbl.integer("quantity", 128).notNullable()
-      tbl.string("weightUnit", 128).notNullable()
+      tbl.integer("quantity", 128).notNullable();
+      tbl.string("weightUnit", 128).notNullable();
       tbl.string("inventoryItem", 128).notNullable();
       tbl
         .integer("user_id")
@@ -39,7 +39,7 @@ exports.up = function(knex) {
         .inTable("users")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
-    })
+    });
 };
 
 // exports.down = function(knex) {
@@ -50,8 +50,8 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-  .dropTableIfExists("quantity")
-  .dropTableIfExists("weights")
-  .dropTableIfExists("inventory")
-  .dropTableIfExists("users")
+    .dropTableIfExists("quantity")
+    .dropTableIfExists("weights")
+    .dropTableIfExists("inventory")
+    .dropTableIfExists("users");
 };

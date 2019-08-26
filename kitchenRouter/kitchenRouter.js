@@ -5,7 +5,7 @@ const db = require("../data/db-Config");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Base ULR - /kitchen
+// Base URL - /kitchen
 
 router.get("/", (req, res) => {
   let body = req.body;
@@ -15,7 +15,6 @@ router.get("/", (req, res) => {
 });
 
 router.get("/inventory", (req, res) => {
-  //console.log(req.userInfo.subject);
   let id = req.userInfo.subject;
   kitchenHelper.getUserInventory(id).then(userInventory => {
     res.status(200).json(userInventory);
@@ -49,11 +48,23 @@ router.put(
   kitchenHelper.reqBodyCheckPut,
   (req, res) => {
     const editItem = req.body;
-    console.log(editItem);
-    kitchenHelper
-      .editInventory(editItem)
-      .then(editedItem => {
-        res.status(200).json(editedItem);
+    // db call to inventory checks if user has authorization to delete the item
+    db("inventory")
+      .where({ id: editItem.id })
+      .first()
+      .then(item => {
+        // checks if the user_id added by kitchenHelper.addUserID is the same as the userID
+        // in the database on the item to be deleted
+        if (editItem.user_id != item.user_id) {
+          // Forbids users from editing inventory items they don't own
+          res.status(401).json({
+            Error: "You are not authorized to edit another user's inventory"
+          });
+        } else {
+          kitchenHelper.editInventory(editItem).then(editedItem => {
+            res.status(200).json(editedItem);
+          });
+        }
       })
       .catch(error => {
         res.status(500).json({ Error: "Something's gone horribly wrong" });
@@ -61,19 +72,13 @@ router.put(
   }
 );
 
-// db call to inventory checks if user has authorization to delete the item
 router.delete("/inventory", kitchenHelper.addUserID, (req, res) => {
-  // req.body contains user_id and id number to be deleted
   const deleted = req.body;
-  //  call DB inventory
   db("inventory")
     .where({ id: deleted.id })
     .first()
     .then(item => {
-      //checks if the user_id added by kitchenHelper.addUserID is the same as the userID
-      // in the database on the item to be deleted
       if (deleted.user_id != item.user_id) {
-        // Forbids users from deleting inventory items they don't own
         res.status(401).json({
           Error: "You are not authorized to delete another user's inventory"
         });
