@@ -7,28 +7,37 @@ const jwt = require("jsonwebtoken");
 
 // Base ULR - /kitchen
 
-router.get("/", (req, res)=>{
-    let body = req.body
-    let header = req.header
-    userID = req.userInfo.subject
-    res.status(200).json({Hello: "from the kitchen", body, header, userID})
-})
+router.get("/", (req, res) => {
+  let body = req.body;
+  let header = req.header;
+  userID = req.userInfo.subject;
+  res.status(200).json({ Hello: "from the kitchen", body, header, userID });
+});
 
-router.get("/inventory", (req, res)=>{
-    let id = req.userInfo.subject
-    console.log(id)
-    kitchenHelper.getUserInventory(id).then(test=>{
-        res.status(200).json(test)
-    })
-})
+router.get("/inventory", (req, res) => {
+  //console.log(req.userInfo.subject);
+  let id = req.userInfo.subject;
+  kitchenHelper.getUserInventory(id).then(userInventory => {
+    res.status(200).json(userInventory);
+  });
+});
 
-router.post("/ingredient", (req, res)=>{
-
-})
+// addUserID takes user_id from decoded token, adds to user req body
+router.post("/inventory", kitchenHelper.addUserID, (req, res) => {
+  const newInven = req.body;
+  kitchenHelper
+  .addNewInventoryItem(newInven)
+  .then(test2 => {
+    res.status(200).json(test2);
+  })
+  .catch(error=>{
+      res.status(500).json({Error: "Something's gone horribly wrong"})
+  })
+});
 
 // Basic idea - user already included via decoded token, just need ingredients and quantity to be added,
 // Should make ingredients and quantity non-Nullable later?
-//  req.body will include: - id from token, ingredients, quantity 
+//  req.body will include: - id from token, ingredients, quantity
 //- just add to table and include user id as FK - boom, you're done
 
 // GET requests will have to be to quantity - it's the only table that tracks relationships between users and ingredients.

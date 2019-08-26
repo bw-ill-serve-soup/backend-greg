@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 module.exports = {
-    getAll, getUserInventory
+    getAll, getUserInventory, addNewInventoryItem, addUserID
 }
 
 function getAll () {
@@ -11,11 +11,18 @@ function getAll () {
 }
 
 function getUserInventory (id) {
+
     return db("inventory").where({user_id: id})
 }
 
-function addNewIngredient () {
-    return db("ingredients").insert
+function addUserID (req, res, next) {
+    req.body.user_id = req.userInfo.subject
+    next()
+}
+
+// user_id handled by middleware, addUserID
+function addNewInventoryItem (newInventory) {
+   return db("inventory").insert(newInventory)
 }
 
 // {
