@@ -24,44 +24,65 @@ router.get("/inventory", (req, res) => {
 
 // addUserID takes user_id from decoded token, adds to user req body
 // reqBodyCheck ensures all required fields are present
-router.post("/inventory", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckPost, (req, res) => {
-  const newInven = req.body;
-  kitchenHelper
-    .addNewInventoryItem(newInven)
-    .then(newItem => {
-      res.status(200).json(newItem);
-    })
-    .catch(error => {
-      res.status(500).json({ Error: "Something's gone horribly wrong" });
-    });
-});
+router.post(
+  "/inventory",
+  kitchenHelper.addUserID,
+  kitchenHelper.reqBodyCheckPost,
+  (req, res) => {
+    const newInven = req.body;
+    kitchenHelper
+      .addNewInventoryItem(newInven)
+      .then(newItem => {
+        res.status(200).json(newItem);
+      })
+      .catch(error => {
+        res.status(500).json({ Error: "Something's gone horribly wrong" });
+      });
+  }
+);
 
 // addUserID adds proper user ID
 // reqBodyCheck ensures all required fields are present
-router.put("/inventory", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckPut, (req, res) => {
-  const editItem = req.body;
-  console.log(editItem);
-  kitchenHelper
-    .editInventory(editItem)
-    .then(editedItem => {
-      res.status(200).json(editedItem);
-    })
-    .catch(error => {
-      res.status(500).json({ Error: "Something's gone horribly wrong" });
-    });
-});
+router.put(
+  "/inventory",
+  kitchenHelper.addUserID,
+  kitchenHelper.reqBodyCheckPut,
+  (req, res) => {
+    const editItem = req.body;
+    console.log(editItem);
+    kitchenHelper
+      .editInventory(editItem)
+      .then(editedItem => {
+        res.status(200).json(editedItem);
+      })
+      .catch(error => {
+        res.status(500).json({ Error: "Something's gone horribly wrong" });
+      });
+  }
+);
 
-// Works, but can delete any users inventory item if the item id is valid.
-// With more time, I'd add a database call, make sure the user_id on the body matches
-// the user_id for the item attempting to be deleted.
-//  But front end needs these endpoints today, such is the nature of build week
-
+// db call to inventory checks if user has authorization to delete the item
 router.delete("/inventory", kitchenHelper.addUserID, (req, res) => {
-  //console.log(req.body);
+  // req.body contains user_id and id number to be deleted
   const deleted = req.body;
-  kitchenHelper.deleteItem(deleted).then(delItem => {
-    res.status(200).json(delItem);
-  });
+  //  call DB inventory
+  db("inventory")
+    .where({ id: deleted.id })
+    .first()
+    .then(item => {
+      //checks if the user_id added by kitchenHelper.addUserID is the same as the userID
+      // in the database on the item to be deleted
+      if (deleted.user_id != item.user_id) {
+        // Forbids users from deleting inventory items they don't own
+        res.status(401).json({
+          Error: "You are not authorized to delete another user's inventory"
+        });
+      } else {
+        kitchenHelper.deleteItem(deleted).then(delItem => {
+          res.status(200).json(delItem);
+        });
+      }
+    });
 });
 
 module.exports = router;

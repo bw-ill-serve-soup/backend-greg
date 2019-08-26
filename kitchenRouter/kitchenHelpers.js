@@ -43,20 +43,29 @@ function deleteItem(deleted) {
     .del();
 }
 
-function reqBodyCheckPut (req, res, next) {
-    if (req.body.quantity && req.body.weightUnit && req.body.inventoryItem && req.body.user_id && req.body.id) {
-        next()
-    }
-    else {
-        res.status(400).json({Error: "Your request is missing a required field"})
-    }
+function reqBodyCheckPut(req, res, next) {
+  if (
+    req.body.quantity &&
+    req.body.weightUnit &&
+    req.body.inventoryItem &&
+    req.body.user_id &&
+    req.body.id
+  ) {
+    next();
+  } else {
+    res.status(400).json({ Error: "Your request is missing a required field" });
+  }
 }
 
-function reqBodyCheckPost (req, res, next) {
-    if (req.body.quantity && req.body.weightUnit && req.body.inventoryItem && req.body.user_id) {
-        next()
-    }
-    else {
-        res.status(400).json({Error: "Your request is missing a required field"})
-    }
+function reqBodyCheckPost(req, res, next) {
+  if (
+    req.body.quantity &&
+    req.body.weightUnit &&
+    req.body.inventoryItem &&
+    req.body.user_id
+  ) {
+    next();
+  } else {
+    res.status(400).json({ Error: "Your request is missing a required field" });
+  }
 }
