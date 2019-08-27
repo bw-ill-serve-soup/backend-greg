@@ -34,10 +34,16 @@ router.post(
   kitchenHelper.reqBodyCheckPost,
   (req, res) => {
     const newInven = req.body;
+    let id = req.userInfo.subject;
+    // adds new item to database
     kitchenHelper
       .addNewInventoryItem(newInven)
-      .then(newItem => {
-        res.status(200).json(newItem);
+      .then(newItemId => {
+        // Per front-end request, fetches user's new inventory
+        kitchenHelper.getUserInventory(id).then(userInventory => {
+          // Sends frontend new item number + user's inventory
+          res.status(200).json({ newItemId, userInventory });
+        });
       })
       .catch(error => {
         res.status(500).json({ Error: "Something's gone horribly wrong" });
