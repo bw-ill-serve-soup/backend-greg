@@ -38,9 +38,9 @@ function editInventory(item) {
     .update(item);
 }
 
-function deleteItem(deleted) {
+function deleteItem(deleteId) {
   return db("inventory")
-    .where({ id: deleted.id })
+    .where({ id: deleteId })
     .del();
 }
 
@@ -60,7 +60,7 @@ function reqBodyCheckPut(req, res, next) {
 
 function reqBodyCheckDelete(req, res, next) {
   if (
-    req.body.id
+    req.params.id
   ) {
     next();
   } else {

@@ -83,10 +83,11 @@ router.put(
   }
 );
 
-router.delete("/inventory", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckDelete, (req, res) => {
-  const deleted = req.body;
+router.delete("/inventory/:id", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckDelete, (req, res) => {
+  const deleted = req.body
+  const deleteId = req.params.id;
   db("inventory")
-    .where({ id: deleted.id })
+    .where({ id: deleteId})
     .first()
     .then(item => {
       if (deleted.user_id != item.user_id) {
@@ -94,7 +95,7 @@ router.delete("/inventory", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckD
           Error: "You are not authorized to delete another user's inventory"
         });
       } else {
-        kitchenHelper.deleteItem(deleted).then(delItem => {
+        kitchenHelper.deleteItem(deleteId).then(delItem => {
           res.status(200).json(delItem);
         });
       }
