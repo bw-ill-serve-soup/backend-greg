@@ -17,13 +17,13 @@ router.get("/", (req, res) => {
 router.get("/inventory", (req, res) => {
   let id = req.userInfo.subject;
   kitchenHelper
-  .getUserInventory(id)
-  .then(userInventory => {
-    res.status(200).json(userInventory);
-  })
-  .catch(error => {
-    res.status(500).json({ Error: "Something's gone horribly wrong" });
-  });
+    .getUserInventory(id)
+    .then(userInventory => {
+      res.status(200).json(userInventory);
+    })
+    .catch(error => {
+      res.status(500).json({ Error: "Something's gone horribly wrong" });
+    });
 });
 
 // addUserID takes user_id from decoded token, adds to user req body
