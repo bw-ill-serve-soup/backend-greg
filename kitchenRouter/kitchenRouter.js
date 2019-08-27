@@ -83,26 +83,31 @@ router.put(
   }
 );
 
-router.delete("/inventory/:id", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckDelete, (req, res) => {
-  const deleted = req.body
-  const deleteId = req.params.id;
-  db("inventory")
-    .where({ id: deleteId})
-    .first()
-    .then(item => {
-      if (deleted.user_id != item.user_id) {
-        res.status(401).json({
-          Error: "You are not authorized to delete another user's inventory"
-        });
-      } else {
-        kitchenHelper.deleteItem(deleteId).then(delItem => {
-          res.status(200).json(delItem);
-        });
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ Error: "Something's gone horribly wrong" });
-    });
-});
+router.delete(
+  "/inventory/:id",
+  kitchenHelper.addUserID,
+  kitchenHelper.reqBodyCheckDelete,
+  (req, res) => {
+    const deleted = req.body;
+    const deleteId = req.params.id;
+    db("inventory")
+      .where({ id: deleteId })
+      .first()
+      .then(item => {
+        if (deleted.user_id != item.user_id) {
+          res.status(401).json({
+            Error: "You are not authorized to delete another user's inventory"
+          });
+        } else {
+          kitchenHelper.deleteItem(deleteId).then(delItem => {
+            res.status(200).json(delItem);
+          });
+        }
+      })
+      .catch(error => {
+        res.status(500).json({ Error: "Something's gone horribly wrong" });
+      });
+  }
+);
 
 module.exports = router;

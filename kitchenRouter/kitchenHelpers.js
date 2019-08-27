@@ -59,9 +59,7 @@ function reqBodyCheckPut(req, res, next) {
 }
 
 function reqBodyCheckDelete(req, res, next) {
-  if (
-    req.params.id
-  ) {
+  if (req.params.id) {
     next();
   } else {
     res.status(400).json({ Error: "Your request is missing a required field" });
