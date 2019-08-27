@@ -27,9 +27,14 @@ router.post("/register", userFunc.hashPassword, (req, res) => {
 
 router.post("/find/:id", (req, res) => {
   const id = req.params.id;
-  userFunc.findUser(id).then(user => {
-    res.status(200).json(user);
-  });
+  userFunc
+    .findUser(id)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(error => {
+      res.status(500).json({ Error: "Something's gone horribly wrong" });
+    });
 });
 
 router.post("/login", (req, res) => {
