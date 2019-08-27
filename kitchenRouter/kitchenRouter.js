@@ -83,7 +83,7 @@ router.put(
   }
 );
 
-router.delete("/inventory", kitchenHelper.addUserID, (req, res) => {
+router.delete("/inventory", kitchenHelper.addUserID, kitchenHelper.reqBodyCheckDelete, (req, res) => {
   const deleted = req.body;
   db("inventory")
     .where({ id: deleted.id })

@@ -10,7 +10,8 @@ module.exports = {
   editInventory,
   deleteItem,
   reqBodyCheckPut,
-  reqBodyCheckPost
+  reqBodyCheckPost,
+  reqBodyCheckDelete
 };
 
 function getAll() {
@@ -49,6 +50,16 @@ function reqBodyCheckPut(req, res, next) {
     req.body.weightUnit &&
     req.body.inventoryItem &&
     req.body.user_id &&
+    req.body.id
+  ) {
+    next();
+  } else {
+    res.status(400).json({ Error: "Your request is missing a required field" });
+  }
+}
+
+function reqBodyCheckDelete(req, res, next) {
+  if (
     req.body.id
   ) {
     next();
