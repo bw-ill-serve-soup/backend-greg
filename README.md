@@ -25,3 +25,4 @@ All CRUD operations require a token.
 POST and PUT will check to make sure the req.body has the required, non-Nullable fields, will return an error message if they don't
 
 PUT and DELETE have an internal check to make sure that the user logged in/decodedToken userId matches the userId in the database of the item they're attempting to edit or delete, so users can't delete each others' inventory items
+
