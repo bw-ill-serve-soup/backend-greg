@@ -40,7 +40,6 @@ describe("User Login + GET", () => {
           .send({ username: "Baggins", password: "Baggins" })
           .expect(200);
       })
-
       .then(res => {
         const token = res;
         request(server)
