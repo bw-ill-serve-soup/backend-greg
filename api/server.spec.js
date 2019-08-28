@@ -17,47 +17,119 @@ describe("GET", () => {
         expect(res.status).toBe(200);
       });
   });
-//   it("GET kitchen", () => {
-//     return request(server)
-//       .get("/kitchen")
-//       .set(
-//         "Authorization",
-//         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoxLCJuYW1lIjoiYWRtaW4iLCJpYXQiOjE1NjY5NTMxNzksImV4cCI6MTU2NzAzOTU3OX0.zDqHoaezs9oTJe-OAPYbHF7s3__V_F4YgcbdztDsK8s"
-//       )
-//       .then(res => {
-//         expect(res.status).toBe(200);
-//       });
-//     //.set('Authorization', 'Bearer ' + token)
-//     //.set({ 'API-Key': 'foobar', Accept: 'application/json' })
-//   });
 });
 
-// describe("user creation", () => {
-//   it("Create new user, test CRUD", async () => {
+// describe("User Registration", () => {
+//   it("Create new user", async () => {
 //     return await request(server)
 //       .post("/api/register")
-//       .send({ username: "Frodo5", password: "Frodo5" })
-//       .expect(200)
-//       .then(res => {
-//         request(server)
-//           .post("/api/login")
-//           .send({ username: "Frodo5", password: "Frodo5" })
-//           .expect(200);
-//       })
+//       .send({ username: "Baggins", password: "Baggins" })
+//       .expect(200);
 //   });
 // });
 
-    //   .then(res => {
-    //     request(server)
-    //       .get("/kitchen")
-    //       .set({
-    //         Authorization:
-    //         eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoxLCJuYW1lIjoiYWRtaW4iLCJpYXQiOjE1NjY5NTMxNzksImV4cCI6MTU2NzAzOTU3OX0.zDqHoaezs9oTJe-OAPYbHF7s3__V_F4YgcbdztDsK8s
-    //   })
-    //       .expect(200);
-    //   });
+describe("User Login + GET", () => {
+  it("Login, GET", async () => {
+    return await request(server)
+      .post("/api/login")
+      .send({ username: "Baggins", password: "Baggins" })
+      .expect(200)
+      .then(res => {
+        request(server)
+          .post("/api/login")
+          .send({ username: "Baggins", password: "Baggins" })
+          .expect(200);
+      })
 
+      .then(res => {
+        const token = res;
+        request(server)
+          .get("/kitchen")
+          .set({ Authorization: token })
+          .expect(200);
+      });
+  });
+});
 
+describe("User Login + POST", () => {
+  it("User Login + POST", async () => {
+    return await request(server)
+      .post("/api/login")
+      .send({ username: "Baggins", password: "Baggins" })
+      .expect(200)
+      .then(res => {
+        request(server)
+          .post("/api/login")
+          .send({ username: "Baggins", password: "Baggins" })
+          .expect(200);
+      })
+      .then(res => {
+        const token = res;
+        request(server)
+          .post("/kitchen/inventory")
+          .set({ Authorization: token })
+          .send({
+            quantity: 5,
+            weightUnit: 12,
+            inventoryItem: "Tonka"
+          })
+          .expect(200);
+      });
+  });
+});
+
+describe("Login + PUT", () => {
+  it("Login + PUT", async () => {
+    return await request(server)
+      .post("/api/login")
+      .send({ username: "Baggins", password: "Baggins" })
+      .expect(200)
+      .then(res => {
+        request(server)
+          .post("/api/login")
+          .send({ username: "Baggins", password: "Baggins" })
+          .expect(200);
+      })
+      .then(res => {
+        const token = res;
+        request(server)
+          .put("/kitchen/inventory")
+          .set({ Authorization: token })
+          .send({
+            id: 1,
+            quantity: 50,
+            weightUnit: 120,
+            inventoryItem: "Tonka Trucks"
+          })
+          .expect(200);
+      });
+  });
+});
+
+describe("Login + DELETE", () => {
+  it("Login + DELETE", async () => {
+    return await request(server)
+      .post("/api/login")
+      .send({ username: "Baggins", password: "Baggins" })
+      .expect(200)
+      .then(res => {
+        request(server)
+          .post("/api/login")
+          .send({ username: "Baggins", password: "Baggins" })
+          .expect(200);
+      })
+      .then(res => {
+        const token = res;
+        request(server)
+          .put("/kitchen/inventory/1")
+          .set({ Authorization: token })
+          .send({
+            id: 1
+          })
+          .expect(200);
+      });
+  });
+});
 
 describe("register request", () => {
   it("register fail for lack of password", () => {
@@ -77,12 +149,3 @@ describe("register request", () => {
       });
   });
 });
-
-describe("test", ()=>{
-    it("test", ()=>{
-        return request(server)  
-        .get("/kitchen")
-        .set({Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoxLCJuYW1lIjoiYWRtaW4iLCJpYXQiOjE1NjY5NTM4MjAsImV4cCI6MTU2NzA0MDIyMH0.XyXKybr3DDadOfImQVaGITc6XPHt1KYP4NzytJC1X2w`}) 
-        .expect(200)
-    })
-})
