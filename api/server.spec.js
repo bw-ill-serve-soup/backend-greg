@@ -120,7 +120,7 @@ describe("Login + DELETE", () => {
       .then(res => {
         const token = res;
         request(server)
-          .put("/kitchen/inventory/1")
+          .delete("/kitchen/inventory/1")
           .set({ Authorization: token })
           .send({
             id: 1
